@@ -42,9 +42,6 @@
     <Compile Include="BoardTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="AuthoringTests.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Tetris\Tetris.csproj">
       <Project>{CB30D8F9-7EF0-4E68-80E5-4427397E97BA}</Project>
       <Name>Tetris</Name>
