@@ -41,12 +41,13 @@ namespace Tetris.Tests
          * Al principio el tablero no tiene pieza actual
          * El tablero permite poner una pieza
          * El tablero da informacion sobre la posicion de la pieza actual
-         * Al hacer progresar el tablero cae la pieza actual
-         * El tablero hace linea
+         * Al hacer progresar el tablero baja la pieza actual
          * Al apoyarse la pieza, cambia la pieza actual
+         * Al apoyarse la pieza, el tablero comprueba si hay línea y en ese caso borra los bloques de la misma
          * Si se avanza el tablero y no existe pieza actual deberia dar error
          * No se puede agregar una pieza si hay una pieza actual
-         * 
+         * El tablero pierde al llegar a la cima.
+         * El tablero gana con el alcance de un objetivo.
          */
 
         [TestMethod]
@@ -80,7 +81,7 @@ namespace Tetris.Tests
         }
 
         [TestMethod]
-        public void WhenBoardAdvancesCurrentPieceDrops()
+        public void WhenBoardAdvancesCurrentPieceGoesDown()
         {
             var board = new Board();
             board.AddNewPiece();
