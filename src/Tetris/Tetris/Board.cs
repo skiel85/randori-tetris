@@ -25,19 +25,5 @@ namespace Tetris
         }
     }
 
-    public class Piece
-    {
-        int height;
-        public int Height
-        {
-            get
-            {
-                return height;
-            }
-            set
-            {
-                height = value;
-            }
-        }
-    }
+
 }
