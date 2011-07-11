@@ -41,13 +41,15 @@ namespace Tetris.Tests
          * Al principio el tablero no tiene pieza actual
          * El tablero permite poner una pieza
          * El tablero da informacion sobre la posicion de la pieza actual
-         * Al hacer progresar el tablero baja la pieza actual
+         * Si se avanza el tablero y no existe pieza actual no tira error
+         * Al hacer progresar el tablero baja la pieza actual desde la posición 0 a la posición 1
+         * Al hacer progresar el tablero baja la pieza actual de a uno
+         * La pieza avanza hasta un limite establecido
          * Al apoyarse la pieza, cambia la pieza actual
          * Al apoyarse la pieza, el tablero comprueba si hay línea y en ese caso borra los bloques de la misma
-         * Si se avanza el tablero y no existe pieza actual deberia dar error
          * No se puede agregar una pieza si hay una pieza actual
-         * El tablero pierde al llegar a la cima.
-         * El tablero gana con el alcance de un objetivo.
+         * El tablero pierde al llegar a la cima
+         * El tablero gana con el alcance de un objetivo
          */
 
         [TestMethod]
@@ -81,12 +83,31 @@ namespace Tetris.Tests
         }
 
         [TestMethod]
-        public void WhenBoardAdvancesCurrentPieceGoesDown()
+        public void WhenBoardFirstAdvancesCurrentPieceGoesDown()
         {
             var board = new Board();
             board.AddNewPiece();
             board.Advance();
             Assert.AreEqual(1, board.CurrentPiece.Height);
+        }
+
+        [TestMethod]
+        public void WhenBoardAdvancesCurrentPieceGoesDown()
+        {
+            var board = new Board();
+            board.AddNewPiece();
+            for (int i = 0; i <= 20;i++ )
+            {
+                Assert.AreEqual(i, board.CurrentPiece.Height);
+                board.Advance();
+            }
+            Assert.AreEqual(21, board.CurrentPiece.Height);
+        }
+        
+        [TestMethod]
+        public void WhenDoesNotExistsCurrentPieceAndBoardAdvancesNothingOcurrs() {
+            var board = new Board();
+            board.Advance();
         }
     }
 }
