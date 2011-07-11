@@ -21,7 +21,10 @@ namespace Tetris
 
         public void Advance()
         {
-            currentPiece.Height = 1;
+            if (currentPiece != null)
+            {
+                currentPiece.Height += 1;
+            }
         }
     }
 
