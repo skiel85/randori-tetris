@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
@@ -18,6 +19,18 @@ namespace Tetris
             {
                 height = value;
             }
+        }
+
+        private IList<Block> _block;
+        public Piece()
+        {
+            _block = new List<Block>();
+            _block.Add(new Block());
+        }
+
+        public IEnumerable<Block> GetBlocks()
+        {
+            return _block;
         }
     }
 }
