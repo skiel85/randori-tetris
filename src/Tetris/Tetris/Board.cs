@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -7,7 +6,7 @@ namespace Tetris
 {
     public class Board
     {
-        private readonly List<Block> _blocks = new List<Block>();
+        private BlockManager _blockManager;
         public int Height { get; set; }
         public int Width { get; set; }
         public Piece CurrentPiece { get; set; }
@@ -26,6 +25,7 @@ namespace Tetris
         {
             this.Height = height;
             this.Width = width;
+            _blockManager = new BlockManager();
         }
 
         public void AddNewPiece()
@@ -62,12 +62,12 @@ namespace Tetris
 
         private void ExtractCurrentPieceBlocks()
         {
-            _blocks.Add(CurrentPiece.GetBlocks().First());
+            _blockManager.Add(CurrentPiece.GetBlocks().First());
         }
 
-        private Piece RemoveCurrentPiece()
+        private void RemoveCurrentPiece()
         {
-            return CurrentPiece = null;
+            CurrentPiece = null;
         }
 
         private void VerifyAndRemoveLines()
@@ -84,54 +84,14 @@ namespace Tetris
         {
             if (IsFullLine(currentRow))
             {
-                RemoveLine(currentRow);
-                MoveUpperRowsDown(currentRow);
+                _blockManager.RemoveLine(currentRow);
+                _blockManager.MoveUpperRowsDown(currentRow);
             }
         }
 
         private bool IsFullLine(int currentRow)
         {
-            return CountBlocksAtRow(currentRow) >= this.Width;
-        }
-
-        private int CountBlocksAtRow(int currentRow)
-        {
-            return GetBlocksAtRow(currentRow).Count();
-        }
-
-        private IEnumerable<Block> GetBlocksAtRow(int currentRow)
-        {
-            return _blocks.Where(IsAtRow(currentRow));
-        }
-
-        private static Func<Block, bool> IsAtRow(int currentRow)
-        {
-            return eachBlock => eachBlock.Y == currentRow;
-        }
-
-        private void RemoveLine(int currentRow)
-        {
-            _blocks.Where(eachBlock => eachBlock.Y == currentRow).ToArray().Each(RemoveBlock);
-        }
-
-        private void MoveUpperRowsDown(int currentRow)
-        {
-            _blocks.Where(IsUpperTo(currentRow)).Each(MoveBlockDown());
-        }
-
-        private static Action<Block> MoveBlockDown()
-        {
-            return b => b.Y++;
-        }
-
-        private static Func<Block, bool> IsUpperTo(int currentRow)
-        {
-            return eachBlock => eachBlock.Y < currentRow;
-        }
-
-        private void RemoveBlock(Block b)
-        {
-            _blocks.Remove(b);
+            return _blockManager.CountBlocksAtRow(currentRow) >= this.Width;
         }
 
         private bool IsCurrentPieceInLastValidY()
@@ -146,37 +106,17 @@ namespace Tetris
 
         public IEnumerable<Block> GetBlocks()
         {
-            return _blocks.AsEnumerable();
+            return _blockManager.GetBlocks();
         }
 
         public bool Contains(Block block)
         {
-            return GetBlocks().Any(block.Equals);
+            return _blockManager.Contains(block);
         }
 
         public Block AddBlock(int x, int y)
         {
-            var block = new Block(x, y);
-            _blocks.Add(block);
-            return block;
-        }
-    }
-
-    public static class EachExtension
-    {
-        public static void Each<T>(this IEnumerable<T> enumberable, Action<T> action)
-        {
-            foreach (var item in enumberable)
-            {
-                action(item);
-            }
-        }
-
-        public static void Second<T>(this IEnumerable<T> enumberable, Action<T> action)
-        {
-            var en = enumberable.GetEnumerator();
-            en.MoveNext();
-            action(en.Current);
+            return _blockManager.AddBlock(x, y);
         }
     }
 }
