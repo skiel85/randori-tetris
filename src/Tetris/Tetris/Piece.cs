@@ -8,29 +8,32 @@ namespace Tetris
 {
     public class Piece
     {
-        int height;
-        public int Height
+        public int Y
         {
             get
             {
-                return height;
-            }
-            set
-            {
-                height = value;
+                return _blocks.First().Y;
             }
         }
 
-        private IList<Block> _block;
+        private readonly IList<Block> _blocks;
+
         public Piece()
         {
-            _block = new List<Block>();
-            _block.Add(new Block());
+            _blocks = new List<Block> { new Block() };
         }
 
         public IEnumerable<Block> GetBlocks()
         {
-            return _block;
+            return _blocks;
+        }
+
+        public void MoveDown()
+        {
+            foreach (var block in _blocks)
+            {
+                block.Y++;
+            }
         }
     }
 }
