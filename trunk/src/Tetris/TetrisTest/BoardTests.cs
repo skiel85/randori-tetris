@@ -50,11 +50,19 @@ namespace Tetris.Tests
          * > La pieza avanza hasta un limite establecido
          * > Al apoyarse la pieza, la pieza se separa en sus bloques y pasan a formar parte del tablero
          * ¡4 horas hasta acá!
-         * Al apoyarse la pieza, el tablero comprueba si hay línea y en ese caso borra los bloques de la misma
+         * > Cuando se avanza el tablero comprueba si hay línea y en ese caso borra los bloques de la misma
+         * > Al mover la pieza se mueven los bloques que contiene
+         * > el tablero permite 2 dimensiones
+         * > probar que hace lineas multiples
+         * probar que luego de hacer lineas bajan los blques
+         * piezas de mas de un bloque
+         * probar que una pieza se pueda apoyar, no solo en el fondo, sino tambien sobre un bloque
          * No se puede agregar una pieza si hay una pieza actual
          * El tablero pierde al llegar a la cima
          * El tablero gana con el alcance de un objetivo
-         * 
+         * El tablero tiene en cuenta las colisiones contra bloques al moverse lateralmente y al rotar.
+         * Rotar?
+         * Puntaje?
          */
 
         [TestMethod]
@@ -84,7 +92,7 @@ namespace Tetris.Tests
         {
             var board = new Board();
             board.AddNewPiece();
-            Assert.AreEqual(0, board.CurrentPiece.Height);
+            Assert.AreEqual(0, board.CurrentPiece.Y);
         }
 
         [TestMethod]
@@ -93,7 +101,7 @@ namespace Tetris.Tests
             var board = new Board();
             board.AddNewPiece();
             board.Advance();
-            Assert.AreEqual(1, board.CurrentPiece.Height);
+            Assert.AreEqual(1, board.CurrentPiece.Y);
         }
 
         [TestMethod]
@@ -103,10 +111,10 @@ namespace Tetris.Tests
             board.AddNewPiece();
             for (int i = 0; i <= 20; i++)
             {
-                Assert.AreEqual(i, board.CurrentPiece.Height);
+                Assert.AreEqual(i, board.CurrentPiece.Y);
                 board.Advance();
             }
-            Assert.AreEqual(21, board.CurrentPiece.Height);
+            Assert.AreEqual(21, board.CurrentPiece.Y);
         }
 
         [TestMethod]
@@ -117,16 +125,14 @@ namespace Tetris.Tests
         }
 
         [TestMethod]
-        public void CurrentPieceAdvancesUntilSomeLimit()
+        public void CurrentPieceAdvancesUntilBottom()
         {
             var board = new Board(3);
-            board.AddNewPiece();
+            board.AddNewPiece(); //0
             board.Advance(); //1
             board.Advance(); //2
-            Assert.AreEqual(2, board.CurrentPiece.Height);
-            board.Advance(); //3
-            Assert.AreEqual(3, board.CurrentPiece.Height);
-            board.Advance(); //3
+            Assert.AreEqual(2, board.CurrentPiece.Y);
+            board.Advance();
             Assert.IsNull(board.CurrentPiece);
         }
 
@@ -139,19 +145,106 @@ namespace Tetris.Tests
 
 
         [TestMethod]
-        public void WhenPieceReachesLimitItsBlocksBecamePartOfTheBoard()
+        public void WhenPieceReachesBottomItsBlocksBecamePartOfTheBoard()
         {
-            var board = new Board(3);
+            var board = new Board(3,2);
             board.AddNewPiece();
             var block = board.CurrentPiece.GetBlocks().First();
-            block.Y = 3;
 
             board.Advance();
             board.Advance();
-            board.Advance();
-            board.Advance();
+            board.Advance();//no deberia hacer linea
 
             Assert.IsTrue(board.Contains(block));
+        }
+
+        [TestMethod]
+        public void WhenAdvancesPieceBlocksAlsoAdvance()
+        {
+            var board = new Board();
+            board.AddNewPiece();
+            Assert.AreEqual(0, board.CurrentPiece.GetBlocks().First().Y);
+            board.Advance();
+            Assert.AreEqual(1, board.CurrentPiece.GetBlocks().First().Y);
+        }
+
+        //Al apoyarse la pieza, el tablero comprueba si hay línea y en ese caso borra los bloques de la misma
+        [TestMethod]
+        public void WhenCurrentPieceReachesBottomVerifyesIfThereIsLine()
+        {
+            var board = new Board(3, 2);
+            board.AddBlock(1, 2);
+            board.AddNewPiece(); //0
+            board.Advance(); //1
+            board.Advance(); //2
+            board.Advance(); //La pieza se apoyó.
+            Assert.AreEqual(0, board.GetBlocks().Count());
+        }
+
+
+        ////Al apoyarse la pieza, el tablero comprueba si hay línea y en ese caso borra los bloques de la misma
+        [TestMethod]
+        public void BoardDetectsMultipleLines()
+        {
+            var board = new Board(3, 2);
+            board.AddBlock(0, 2);
+            board.AddBlock(1, 2);
+            board.AddBlock(1, 1);
+            board.AddBlock(0, 1);
+            //BB
+            //BB
+            Assert.AreEqual(4, board.GetBlocks().Count());
+            board.Advance();
+            Assert.AreEqual(0, board.GetBlocks().Count());
+        }
+
+        //Al apoyarse la pieza, el tablero comprueba si hay línea y en ese caso borra los bloques de la misma
+        [TestMethod]
+        public void BoardDetectsBottomLinesEvenIfNoCurrentPieceLeans()
+        {
+            var board = new Board(3, 2);
+            board.AddNewPiece();
+            board.AddBlock(1, 2);
+            board.AddBlock(0, 2);
+            //BB
+            //BB
+            Assert.AreEqual(2, board.GetBlocks().Count());
+            board.Advance();
+            Assert.AreEqual(0, board.GetBlocks().Count());
+        }
+
+        [TestMethod]
+        public void BoardDetectsBottomLinesEvenIfNoCurrentPieceExists()
+        {
+            var board = new Board(3, 2);
+            board.AddBlock(1, 2);
+            board.AddBlock(0, 2);
+            //BB
+            //BB
+            Assert.AreEqual(2, board.GetBlocks().Count());
+            board.Advance();
+            Assert.AreEqual(0, board.GetBlocks().Count());
+        }
+
+
+        [TestMethod]
+        public void WhenFullLinesIsDetectedOnlyFullLineBlocksAreRemoved()
+        {
+            var board = new Board(4, 2);
+            board.AddBlock(1, 1);
+            board.AddBlock(0, 1);
+            board.AddBlock(1, 2);
+            board.AddBlock(1, 3);
+            board.AddBlock(0, 3);
+            //BB
+            // B
+            //BB
+            Assert.AreEqual(5, board.GetBlocks().Count());
+            board.Advance();
+            //
+            // B
+            //
+            Assert.AreEqual(1, board.GetBlocks().Count());
         }
 
         /*
