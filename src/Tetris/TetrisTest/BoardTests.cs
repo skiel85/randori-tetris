@@ -247,6 +247,34 @@ namespace Tetris.Tests
             Assert.AreEqual(1, board.GetBlocks().Count());
         }
 
+
+        [TestMethod]
+        public void WhenFullLinesIsDetectedBlocksAreMovedDown()
+        {
+            var board = new Board(4, 2);
+            var block1 = board.AddBlock(0, 0);
+            board.AddBlock(1, 1);
+            board.AddBlock(0, 1);
+            var block2 = board.AddBlock(1, 2);
+            board.AddBlock(1, 3);
+            board.AddBlock(0, 3);
+            //B
+            //BB
+            // B
+            //BB
+            Assert.AreEqual(6, board.GetBlocks().Count());
+            board.Advance();
+            //
+            //
+            //B
+            // B
+            Assert.AreEqual(2, board.GetBlocks().Count());
+            Assert.AreEqual(0, block1.X);
+            Assert.AreEqual(2, block1.Y);
+            Assert.AreEqual(1, block2.X);
+            Assert.AreEqual(3, block2.Y);
+        }
+
         /*
         [TestMethod]
         public void xx()
