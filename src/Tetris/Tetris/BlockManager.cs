@@ -70,5 +70,51 @@ namespace Tetris
         {
             return eachBlock => eachBlock.Y < currentRow;
         }
+
+        public bool Collides(Piece currentPiece)
+        {
+            //return
+            //    _blocks.Where(
+            //        eachBlock => IsInmediatelyAboveOf(currentPiece, eachBlock) && IsHorizontalAligned(currentPiece, eachBlock)).
+            //        Count() > 0;
+            foreach (var boardBlock in _blocks)
+            {
+                foreach (var pieceBlock in currentPiece.GetBlocks())
+                {
+                    if (IsHorizontalAligned(boardBlock, pieceBlock) && IsAboveOf(boardBlock, pieceBlock))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private static bool IsAboveOf(Block boardBlock, Block pieceBlock)
+        {
+            return pieceBlock.Y + 1 == boardBlock.Y;
+        }
+
+        //private static bool IsHorizontalAligned(Piece currentPiece, Block eachBlock)
+        //{
+        //    Block first = currentPiece.GetBlocks().First();
+        //    return IsHorizontalAligned(eachBlock, first);
+        //}
+
+        private static bool IsHorizontalAligned(Block one, Block other)
+        {
+            return one.X == other.X;
+        }
+
+        //private static bool IsInmediatelyAboveOf(Piece currentPiece, Block eachBlock)
+        //{
+        //    Block first = currentPiece.GetBlocks().First();
+        //    return IsInmediatelyAboveOf(eachBlock, first);
+        //}
+
+        private static bool IsInmediatelyAboveOf(Block one, Block aboveOf)
+        {
+            return aboveOf.Y == one.Y + 1;
+        }
     }
 }

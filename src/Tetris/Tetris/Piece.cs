@@ -23,6 +23,11 @@ namespace Tetris
             _blocks = new List<Block> { new Block() };
         }
 
+        public Piece(IEnumerable<Block> blocks)
+        {
+            _blocks = new List<Block>(blocks);
+        }
+
         public IEnumerable<Block> GetBlocks()
         {
             return _blocks;
@@ -30,10 +35,12 @@ namespace Tetris
 
         public void MoveDown()
         {
-            foreach (var block in _blocks)
-            {
-                block.Y++;
-            }
+            _blocks.Each(MoveBlockDown);
+        }
+
+        private static void MoveBlockDown(Block b)
+        {
+            b.Y++;
         }
     }
 }

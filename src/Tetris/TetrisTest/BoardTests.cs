@@ -54,9 +54,9 @@ namespace Tetris.Tests
          * > Al mover la pieza se mueven los bloques que contiene
          * > el tablero permite 2 dimensiones
          * > probar que hace lineas multiples
-         * probar que luego de hacer lineas bajan los blques
+         * > probar que luego de hacer lineas bajan los blques
+         * > probar que una pieza se pueda apoyar, no solo en el fondo, sino tambien sobre un bloque
          * piezas de mas de un bloque
-         * probar que una pieza se pueda apoyar, no solo en el fondo, sino tambien sobre un bloque
          * No se puede agregar una pieza si hay una pieza actual
          * El tablero pierde al llegar a la cima
          * El tablero gana con el alcance de un objetivo
@@ -147,7 +147,7 @@ namespace Tetris.Tests
         [TestMethod]
         public void WhenPieceReachesBottomItsBlocksBecamePartOfTheBoard()
         {
-            var board = new Board(3,2);
+            var board = new Board(2, 3);
             board.AddNewPiece();
             var block = board.CurrentPiece.GetBlocks().First();
 
@@ -172,7 +172,7 @@ namespace Tetris.Tests
         [TestMethod]
         public void WhenCurrentPieceReachesBottomVerifyesIfThereIsLine()
         {
-            var board = new Board(3, 2);
+            var board = new Board(2, 3);
             board.AddBlock(1, 2);
             board.AddNewPiece(); //0
             board.Advance(); //1
@@ -186,7 +186,7 @@ namespace Tetris.Tests
         [TestMethod]
         public void BoardDetectsMultipleLines()
         {
-            var board = new Board(3, 2);
+            var board = new Board(2, 3);
             board.AddBlock(0, 2);
             board.AddBlock(1, 2);
             board.AddBlock(1, 1);
@@ -202,7 +202,7 @@ namespace Tetris.Tests
         [TestMethod]
         public void BoardDetectsBottomLinesEvenIfNoCurrentPieceLeans()
         {
-            var board = new Board(3, 2);
+            var board = new Board(2, 3);
             board.AddNewPiece();
             board.AddBlock(1, 2);
             board.AddBlock(0, 2);
@@ -216,7 +216,7 @@ namespace Tetris.Tests
         [TestMethod]
         public void BoardDetectsBottomLinesEvenIfNoCurrentPieceExists()
         {
-            var board = new Board(3, 2);
+            var board = new Board(2, 3);
             board.AddBlock(1, 2);
             board.AddBlock(0, 2);
             //BB
@@ -230,7 +230,7 @@ namespace Tetris.Tests
         [TestMethod]
         public void WhenFullLinesIsDetectedOnlyFullLineBlocksAreRemoved()
         {
-            var board = new Board(4, 2);
+            var board = new Board(2, 4);
             board.AddBlock(1, 1);
             board.AddBlock(0, 1);
             board.AddBlock(1, 2);
@@ -251,7 +251,7 @@ namespace Tetris.Tests
         [TestMethod]
         public void WhenFullLinesIsDetectedBlocksAreMovedDown()
         {
-            var board = new Board(4, 2);
+            var board = new Board(2, 4);
             var block1 = board.AddBlock(0, 0);
             board.AddBlock(1, 1);
             board.AddBlock(0, 1);
@@ -275,20 +275,94 @@ namespace Tetris.Tests
             Assert.AreEqual(3, block2.Y);
         }
 
-        /*
+
         [TestMethod]
-        public void xx()
+        public void PiecesAreLeanedAlsoOnIsolatedBlocks()
         {
-            var a = new Block();
-            var b = xxxx(a);
-            Assert.IsTrue(a == b);
+            var board = new Board(2, 4);
+            //
+            //
+            //B
+            //
+            var isolated = board.AddBlock(0, 2);
+            board.AddNewPiece();
+            var pieceBlock = board.CurrentPiece.GetBlocks().Single();
+            board.Advance();
+            board.Advance();
+            Assert.AreEqual(2, board.GetBlocks().Count());
+            Assert.IsTrue(board.GetBlocks().Contains(isolated));
+            Assert.IsTrue(board.GetBlocks().Contains(pieceBlock));
+
+            Assert.AreEqual(2, isolated.Y);
+            Assert.AreEqual(0, isolated.X);
+
+            Assert.AreEqual(1, pieceBlock.Y);
+            Assert.AreEqual(0, pieceBlock.X);
         }
 
-        public Block xxxx (Block block)
+
+
+
+        [TestMethod]
+        public void WhenAdvancesPieceBlocksAlsoAdvanceEvenForComplexPieces()
         {
-            return block;
+            var board = new Board(4, 5);
+            var block1 = new Block(2, 0);
+            var block2 = new Block(3, 1);
+            board.AddNewPiece(new[] { block1, block2 });
+            board.Advance();
+            Assert.AreEqual(2, block1.X);
+            Assert.AreEqual(1, block1.Y);
+            Assert.AreEqual(3, block2.X);
+            Assert.AreEqual(2, block2.Y);
         }
-          */
+
+
+        [TestMethod]
+        public void WhenCurrentPieceReachesBottomVerifyesIfThereIsLineEvenForComplexPieces()
+        {
+            var board = new Board(3, 5);
+            var block1 = new Block(0, 0);
+            var block2 = new Block(2, 0);
+            board.AddNewPiece(new[] { block1, block2 });
+            board.AddBlock(1, 4);
+            // X X
+            //
+            //
+            //
+            //  X
+            Assert.AreEqual(1, board.GetBlocks().Count());
+            board.Advance(); //1
+            board.Advance();
+            board.Advance();
+            board.Advance(); //4
+            board.Advance();
+
+            Assert.IsNull(board.CurrentPiece);
+            Assert.AreEqual(0, board.GetBlocks().Count( ));
+        }
+
+
+        [TestMethod]
+        public void WhenCurrentPieceColidesWithIsolatedBlocksEvenForComplexPieces()
+        {
+            var board = new Board(3, 3);
+            var block1 = new Block(0, 0);
+            var block2 = new Block(2, 0);
+            board.AddNewPiece(new[] { block1, block2 });
+            board.AddBlock(2, 2);
+            board.AddBlock(1, 0);
+            // XIX
+            //  
+            //   I
+            Assert.AreEqual(2, board.GetBlocks().Count());
+            board.Advance(); //1
+            Assert.AreEqual(2, board.GetBlocks().Count());
+            Assert.IsNotNull(board.CurrentPiece);
+            board.Advance(); //2
+            Assert.IsNull(board.CurrentPiece);
+            Assert.AreEqual(4, board.GetBlocks().Count());
+        } 
     }
 }
 
