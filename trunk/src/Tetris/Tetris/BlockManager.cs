@@ -25,7 +25,7 @@ namespace Tetris
 
         public void MoveUpperRowsDown(int currentRow)
         {
-            _blocks.Where(IsUpperTo(currentRow)).Each(MoveBlockDown());
+            _blocks.Where(IsUpperTo(currentRow)).Each(MoveBlockDown);
         }
 
         public int CountBlocksAtRow(int currentRow)
@@ -61,60 +61,35 @@ namespace Tetris
             return eachBlock => eachBlock.Y == currentRow;
         }
 
-        private static Action<Block> MoveBlockDown()
+        private static void MoveBlockDown(Block b)
         {
-            return b => b.Y++;
+            b.Y++;
         }
 
         private static Func<Block, bool> IsUpperTo(int currentRow)
         {
-            return eachBlock => eachBlock.Y < currentRow;
+            return b => b.Y < currentRow;
         }
 
         public bool Collides(Piece currentPiece)
         {
-            //return
-            //    _blocks.Where(
-            //        eachBlock => IsInmediatelyAboveOf(currentPiece, eachBlock) && IsHorizontalAligned(currentPiece, eachBlock)).
-            //        Count() > 0;
-            foreach (var boardBlock in _blocks)
-            {
-                foreach (var pieceBlock in currentPiece.GetBlocks())
-                {
-                    if (IsHorizontalAligned(boardBlock, pieceBlock) && IsAboveOf(boardBlock, pieceBlock))
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
+            return (from boardBlock in _blocks
+                    from pieceBlock in currentPiece.GetBlocks()
+                    where IsHorizontalAligned(boardBlock, pieceBlock)
+                    && IsInmediatelyAboveOf(boardBlock, pieceBlock)
+                    select boardBlock
+                    ).Any();
         }
 
-        private static bool IsAboveOf(Block boardBlock, Block pieceBlock)
+        private static bool IsInmediatelyAboveOf(Block boardBlock, Block pieceBlock)
         {
             return pieceBlock.Y + 1 == boardBlock.Y;
         }
-
-        //private static bool IsHorizontalAligned(Piece currentPiece, Block eachBlock)
-        //{
-        //    Block first = currentPiece.GetBlocks().First();
-        //    return IsHorizontalAligned(eachBlock, first);
-        //}
 
         private static bool IsHorizontalAligned(Block one, Block other)
         {
             return one.X == other.X;
         }
 
-        //private static bool IsInmediatelyAboveOf(Piece currentPiece, Block eachBlock)
-        //{
-        //    Block first = currentPiece.GetBlocks().First();
-        //    return IsInmediatelyAboveOf(eachBlock, first);
-        //}
-
-        private static bool IsInmediatelyAboveOf(Block one, Block aboveOf)
-        {
-            return aboveOf.Y == one.Y + 1;
-        }
     }
 }

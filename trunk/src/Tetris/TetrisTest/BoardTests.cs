@@ -56,7 +56,7 @@ namespace Tetris.Tests
          * > probar que hace lineas multiples
          * > probar que luego de hacer lineas bajan los blques
          * > probar que una pieza se pueda apoyar, no solo en el fondo, sino tambien sobre un bloque
-         * piezas de mas de un bloque
+         * > piezas de mas de un bloque
          * No se puede agregar una pieza si hay una pieza actual
          * El tablero pierde al llegar a la cima
          * El tablero gana con el alcance de un objetivo
@@ -326,7 +326,7 @@ namespace Tetris.Tests
             var block2 = new Block(2, 0);
             board.AddNewPiece(new[] { block1, block2 });
             board.AddBlock(1, 4);
-            // X X
+            // P P
             //
             //
             //
@@ -352,9 +352,9 @@ namespace Tetris.Tests
             board.AddNewPiece(new[] { block1, block2 });
             board.AddBlock(2, 2);
             board.AddBlock(1, 0);
-            // XIX
+            // PXP
             //  
-            //   I
+            //   X
             Assert.AreEqual(2, board.GetBlocks().Count());
             board.Advance(); //1
             Assert.AreEqual(2, board.GetBlocks().Count());

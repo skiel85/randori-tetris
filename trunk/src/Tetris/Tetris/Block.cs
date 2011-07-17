@@ -15,5 +15,10 @@ namespace Tetris
             X = x;
             Y = y;
         }
+
+        public void MoveDown()
+        {
+            Y++;
+        }
     }
 }

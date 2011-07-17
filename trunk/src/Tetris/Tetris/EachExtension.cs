@@ -12,12 +12,5 @@ namespace Tetris
                 action(item);
             }
         }
-
-        public static void Second<T>(this IEnumerable<T> enumberable, Action<T> action)
-        {
-            var en = enumberable.GetEnumerator();
-            en.MoveNext();
-            action(en.Current);
-        }
     }
 }
