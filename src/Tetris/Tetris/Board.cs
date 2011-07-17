@@ -6,7 +6,7 @@ namespace Tetris
 {
     public class Board
     {
-        private BlockManager _blockManager;
+        private readonly BlockManager _blockManager;
         public int Height { get; set; }
         public int Width { get; set; }
         public Piece CurrentPiece { get; set; }
@@ -91,7 +91,7 @@ namespace Tetris
 
         private bool IsFullLine(int currentRow)
         {
-            return _blockManager.CountBlocksAtRow(currentRow) >= this.Width;
+            return _blockManager.CountBlocksAtRow(currentRow) >= Width;
         }
 
         private bool IsCurrentPieceInLastValidY()

@@ -30,17 +30,12 @@ namespace Tetris
 
         public IEnumerable<Block> GetBlocks()
         {
-            return _blocks;
+            return _blocks.AsEnumerable();
         }
 
         public void MoveDown()
         {
-            _blocks.Each(MoveBlockDown);
-        }
-
-        private static void MoveBlockDown(Block b)
-        {
-            b.Y++;
+            _blocks.Each(b => b.MoveDown());
         }
     }
 }
