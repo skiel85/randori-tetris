@@ -12,16 +12,16 @@ namespace Tetris
         public Piece CurrentPiece { get; set; }
 
         public Board()
-            : this(10, 1)
+            : this(1, 10)
         {
         }
 
         public Board(int height)
-            : this(height, 1)
+            : this(1, height)
         {
         }
 
-        public Board(int height, int width)
+        public Board(int width, int height)
         {
             this.Height = height;
             this.Width = width;
@@ -37,7 +37,7 @@ namespace Tetris
         {
             if (ExistsCurrentPiece())
             {
-                if (IsCurrentPieceInLastValidY())
+                if (IsCurrentPieceInLastValidY() || _blockManager.Collides(CurrentPiece))
                 {
                     LeanCurrentPiece();
                 }
@@ -62,7 +62,7 @@ namespace Tetris
 
         private void ExtractCurrentPieceBlocks()
         {
-            _blockManager.Add(CurrentPiece.GetBlocks().First());
+            CurrentPiece.GetBlocks().Each(b => _blockManager.Add(b));
         }
 
         private void RemoveCurrentPiece()
@@ -117,6 +117,11 @@ namespace Tetris
         public Block AddBlock(int x, int y)
         {
             return _blockManager.AddBlock(x, y);
+        }
+
+        public void AddNewPiece(Block[] blocks)
+        {
+            CurrentPiece = new Piece(blocks);
         }
     }
 }
