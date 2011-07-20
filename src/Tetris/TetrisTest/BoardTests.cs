@@ -59,10 +59,14 @@ namespace Tetris.Tests
          * > piezas de mas de un bloque
          * No se puede agregar una pieza si hay una pieza actual
          * El tablero pierde al llegar a la cima
-         * El tablero gana con el alcance de un objetivo
-         * El tablero tiene en cuenta las colisiones contra bloques al moverse lateralmente y al rotar.
-         * Rotar?
-         * Puntaje?
+         * El tablero gana con el alcance de un objetivo en cantidad de líneas
+         * El tablero tiene en cuenta las colisiones contra bloques al moverse lateralmente
+         * El tablero tiene en cuenta las colisiones contra bloques al rotar.
+         * Las piezas se pueden rotar en 4 orientaciones.
+         * Al hacer una línea aumenta el contador de líneas (puntaje).
+         * Las piezas se pueden mover lateralmente.
+         * Las piezas se pueden mover hacia abajo sin necesidad de avanzar el tablero.
+         * Las piezas se pueden soltar para que caigan hasta el límite.
          */
 
         [TestMethod]
