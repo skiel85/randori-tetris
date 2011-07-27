@@ -123,5 +123,10 @@ namespace Tetris
         {
             CurrentPiece = new Piece(blocks);
         }
+
+        public object GetBlock(int x, int y)
+        {
+            return _blockManager.GetBlocks().Where(b => b.X == x && b.Y == y).SingleOrDefault();
+        }
     }
 }
