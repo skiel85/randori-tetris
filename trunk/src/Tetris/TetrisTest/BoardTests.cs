@@ -3,7 +3,6 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
 
 namespace Tetris.Tests
 {
@@ -57,6 +56,9 @@ namespace Tetris.Tests
          * > probar que luego de hacer lineas bajan los blques
          * > probar que una pieza se pueda apoyar, no solo en el fondo, sino tambien sobre un bloque
          * > piezas de mas de un bloque
+         * > Se puede obtener el bloque que ocupa la celda actual del tablero.
+         * Se puede cargar el tablero a partir de un string.
+         * Se puede guardar el tablero en un string.
          * No se puede agregar una pieza si hay una pieza actual
          * El tablero pierde al llegar a la cima
          * El tablero gana con el alcance de un objetivo en cantidad de líneas
@@ -366,6 +368,17 @@ namespace Tetris.Tests
             board.Advance(); //2
             Assert.IsNull(board.CurrentPiece);
             Assert.AreEqual(4, board.GetBlocks().Count());
+        }
+
+        [TestMethod]
+        public void CanGetCellBlock()
+        {
+            var board = new Board(3, 3);
+            board.AddBlock(2, 2);
+            board.AddBlock(1, 0);
+            Assert.IsNotNull(board.GetBlock(2, 2));
+            Assert.IsNotNull(board.GetBlock(1, 0));
+            Assert.IsNull(board.GetBlock(2, 1));
         } 
     }
 }
