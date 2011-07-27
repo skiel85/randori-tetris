@@ -114,7 +114,7 @@ namespace Tetris
             return _blockManager.Contains(block);
         }
 
-        public Block AddBlock(int x, int y)
+        public Block AddNewBlock(int x, int y)
         {
             return _blockManager.AddBlock(x, y);
         }
