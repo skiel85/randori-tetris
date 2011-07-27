@@ -179,7 +179,7 @@ namespace Tetris.Tests
         public void WhenCurrentPieceReachesBottomVerifyesIfThereIsLine()
         {
             var board = new Board(2, 3);
-            board.AddBlock(1, 2);
+            board.AddNewBlock(1, 2);
             board.AddNewPiece(); //0
             board.Advance(); //1
             board.Advance(); //2
@@ -193,10 +193,10 @@ namespace Tetris.Tests
         public void BoardDetectsMultipleLines()
         {
             var board = new Board(2, 3);
-            board.AddBlock(0, 2);
-            board.AddBlock(1, 2);
-            board.AddBlock(1, 1);
-            board.AddBlock(0, 1);
+            board.AddNewBlock(0, 2);
+            board.AddNewBlock(1, 2);
+            board.AddNewBlock(1, 1);
+            board.AddNewBlock(0, 1);
             //BB
             //BB
             Assert.AreEqual(4, board.GetBlocks().Count());
@@ -210,8 +210,8 @@ namespace Tetris.Tests
         {
             var board = new Board(2, 3);
             board.AddNewPiece();
-            board.AddBlock(1, 2);
-            board.AddBlock(0, 2);
+            board.AddNewBlock(1, 2);
+            board.AddNewBlock(0, 2);
             //BB
             //BB
             Assert.AreEqual(2, board.GetBlocks().Count());
@@ -223,8 +223,8 @@ namespace Tetris.Tests
         public void BoardDetectsBottomLinesEvenIfNoCurrentPieceExists()
         {
             var board = new Board(2, 3);
-            board.AddBlock(1, 2);
-            board.AddBlock(0, 2);
+            board.AddNewBlock(1, 2);
+            board.AddNewBlock(0, 2);
             //BB
             //BB
             Assert.AreEqual(2, board.GetBlocks().Count());
@@ -237,11 +237,11 @@ namespace Tetris.Tests
         public void WhenFullLinesIsDetectedOnlyFullLineBlocksAreRemoved()
         {
             var board = new Board(2, 4);
-            board.AddBlock(1, 1);
-            board.AddBlock(0, 1);
-            board.AddBlock(1, 2);
-            board.AddBlock(1, 3);
-            board.AddBlock(0, 3);
+            board.AddNewBlock(1, 1);
+            board.AddNewBlock(0, 1);
+            board.AddNewBlock(1, 2);
+            board.AddNewBlock(1, 3);
+            board.AddNewBlock(0, 3);
             //BB
             // B
             //BB
@@ -258,12 +258,12 @@ namespace Tetris.Tests
         public void WhenFullLinesIsDetectedBlocksAreMovedDown()
         {
             var board = new Board(2, 4);
-            var block1 = board.AddBlock(0, 0);
-            board.AddBlock(1, 1);
-            board.AddBlock(0, 1);
-            var block2 = board.AddBlock(1, 2);
-            board.AddBlock(1, 3);
-            board.AddBlock(0, 3);
+            var block1 = board.AddNewBlock(0, 0);
+            board.AddNewBlock(1, 1);
+            board.AddNewBlock(0, 1);
+            var block2 = board.AddNewBlock(1, 2);
+            board.AddNewBlock(1, 3);
+            board.AddNewBlock(0, 3);
             //B
             //BB
             // B
@@ -290,7 +290,7 @@ namespace Tetris.Tests
             //
             //B
             //
-            var isolated = board.AddBlock(0, 2);
+            var isolated = board.AddNewBlock(0, 2);
             board.AddNewPiece();
             var pieceBlock = board.CurrentPiece.GetBlocks().Single();
             board.Advance();
@@ -331,7 +331,7 @@ namespace Tetris.Tests
             var block1 = new Block(0, 0);
             var block2 = new Block(2, 0);
             board.AddNewPiece(new[] { block1, block2 });
-            board.AddBlock(1, 4);
+            board.AddNewBlock(1, 4);
             // P P
             //
             //
@@ -356,8 +356,8 @@ namespace Tetris.Tests
             var block1 = new Block(0, 0);
             var block2 = new Block(2, 0);
             board.AddNewPiece(new[] { block1, block2 });
-            board.AddBlock(2, 2);
-            board.AddBlock(1, 0);
+            board.AddNewBlock(2, 2);
+            board.AddNewBlock(1, 0);
             // PXP
             //  
             //   X
@@ -374,8 +374,8 @@ namespace Tetris.Tests
         public void CanGetCellBlock()
         {
             var board = new Board(3, 3);
-            board.AddBlock(2, 2);
-            board.AddBlock(1, 0);
+            board.AddNewBlock(2, 2);
+            board.AddNewBlock(1, 0);
             Assert.IsNotNull(board.GetBlock(2, 2));
             Assert.IsNotNull(board.GetBlock(1, 0));
             Assert.IsNull(board.GetBlock(2, 1));
