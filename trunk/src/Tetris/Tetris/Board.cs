@@ -128,5 +128,36 @@ namespace Tetris
         {
             return _blockManager.GetBlocks().Where(b => b.X == x && b.Y == y).SingleOrDefault();
         }
+
+        public void LoadFromString(string p)
+        {
+            for (int i = 0; i < p.Length; i++)
+            {
+                if (p.ElementAt(i) == 'X')
+                {
+                    _blockManager.AddBlock(i % Width, i / Width);
+                }
+            }
+        }
+
+        public string SaveToString()
+        {
+            var result = new StringBuilder();
+            for (int y = 0; y < Height ; y++)
+            {
+                for (int x = 0; x < Width ; x++)
+                {
+                    if (GetBlock(x, y) == null)
+                    {
+                        result.Append(' ');
+                    }
+                    else
+                    {
+                        result.Append('X');
+                    }
+                }
+            }
+            return result.ToString();
+        }
     }
 }

@@ -57,8 +57,8 @@ namespace Tetris.Tests
          * > probar que una pieza se pueda apoyar, no solo en el fondo, sino tambien sobre un bloque
          * > piezas de mas de un bloque
          * > Se puede obtener el bloque que ocupa una celda del tablero.
-         * Se puede cargar el tablero a partir de un string.
-         * Se puede guardar el tablero en un string.
+         * > Se puede cargar el tablero a partir de un string.
+         * > Se puede guardar el tablero en un string.
          * No se puede agregar una pieza si hay una pieza actual
          * El tablero pierde al llegar a la cima
          * El tablero gana con el alcance de un objetivo en cantidad de líneas
@@ -345,7 +345,7 @@ namespace Tetris.Tests
             board.Advance();
 
             Assert.IsNull(board.CurrentPiece);
-            Assert.AreEqual(0, board.GetBlocks().Count( ));
+            Assert.AreEqual(0, board.GetBlocks().Count());
         }
 
 
@@ -379,7 +379,67 @@ namespace Tetris.Tests
             Assert.IsNotNull(board.GetBlock(2, 2));
             Assert.IsNotNull(board.GetBlock(1, 0));
             Assert.IsNull(board.GetBlock(2, 1));
-        } 
+        }
+
+        [TestMethod]
+        public void CanLoadFromString()
+        {
+            var board = new Board(3, 5);
+            board.LoadFromString(
+                "X X" +
+                " XX" +
+                "XX " +
+                "  X" +
+                "X X");
+            Assert.IsNotNull(board.GetBlock(0, 0));
+            Assert.IsNull(board.GetBlock(1, 0));
+            Assert.IsNotNull(board.GetBlock(2, 0));
+
+            Assert.IsNull(board.GetBlock(0, 1));
+            Assert.IsNotNull(board.GetBlock(1, 1));
+            Assert.IsNotNull(board.GetBlock(2, 1));
+
+            Assert.IsNotNull(board.GetBlock(0, 2));
+            Assert.IsNotNull(board.GetBlock(1, 2));
+            Assert.IsNull(board.GetBlock(2, 2));
+
+            Assert.IsNull(board.GetBlock(0, 3));
+            Assert.IsNull(board.GetBlock(1, 3));
+            Assert.IsNotNull(board.GetBlock(2, 3));
+
+            Assert.IsNotNull(board.GetBlock(0, 4));
+            Assert.IsNull(board.GetBlock(1, 4));
+            Assert.IsNotNull(board.GetBlock(2, 4));
+        }
+
+        [TestMethod]
+        public void CanSaveToString()
+        {
+            var board = new Board(3, 5);
+
+            board.AddNewBlock(0, 0);
+            board.AddNewBlock(2, 0);
+
+            board.AddNewBlock(1, 1);
+            board.AddNewBlock(2, 1);
+
+            board.AddNewBlock(0, 2);
+            board.AddNewBlock(1, 2);
+
+            board.AddNewBlock(2, 3);
+
+            board.AddNewBlock(0, 4);
+            board.AddNewBlock(2, 4);
+
+            Assert.AreEqual(
+                "X X" +
+                " XX" +
+                "XX " +
+                "  X" +
+                "X X",
+                board.SaveToString()
+            );
+        }
     }
 }
 
