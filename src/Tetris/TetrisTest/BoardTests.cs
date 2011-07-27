@@ -56,7 +56,7 @@ namespace Tetris.Tests
          * > probar que luego de hacer lineas bajan los blques
          * > probar que una pieza se pueda apoyar, no solo en el fondo, sino tambien sobre un bloque
          * > piezas de mas de un bloque
-         * > Se puede obtener el bloque que ocupa la celda actual del tablero.
+         * > Se puede obtener el bloque que ocupa una celda del tablero.
          * Se puede cargar el tablero a partir de un string.
          * Se puede guardar el tablero en un string.
          * No se puede agregar una pieza si hay una pieza actual
